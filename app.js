@@ -2,11 +2,10 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
-
-const User = require('./models/user');
-const errorController = require('./controllers/error');
-
 const mongoose = require('mongoose');
+
+const errorController = require('./controllers/error');
+const User = require('./models/user');
 
 const app = express();
 
@@ -33,22 +32,25 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-mongoose.connect('mongodb+srv://ysvet:lUyKSmiT4iELOkGR@cluster0-7fmhc.mongodb.net/shop?retryWrites=true&w=majority')
-  .then( result => {
+mongoose
+  .connect(
+    'mongodb+srv://ysvet:lUyKSmiT4iELOkGR@cluster0-7fmhc.mongodb.net/shop?retryWrites=true&w=majority'
+  )
+  .then(result => {
     User.findOne().then(user => {
-      if(!user) {
+      if (!user) {
         const user = new User({
-          name: "Max",
-          email: "max@mail.com",
+          name: 'Max',
+          email: 'max@test.com',
           cart: {
             items: []
           }
         });
+        user.save();
       }
-      user.save();
-    })
+    });
     app.listen(3000);
   })
-  .catch( err => {
-    console.log(error);
+  .catch(err => {
+    console.log(err);
   });
